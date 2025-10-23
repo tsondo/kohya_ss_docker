@@ -1,0 +1,61 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.env/
+.envrc
+
+# Dataset and outputs
+dataset/
+output/
+captions/
+
+# Model weights and checkpoints
+*.safetensors
+*.ckpt
+*.pt
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+nohup.out
+
+# System files
+.DS_Store
+Thumbs.db
+*:Zone.*
+# VSCode and IDE configs
+.vscode/
+.idea/
+*.swp
+
+# Docker artifacts
+*.pid
+# Hugging Face / pip cache
+.cache/
+huggingface/
+
+# Training state
+.accelerate/
+wandb/
+trainer_state.json
+
+# Extra model formats
+*.bin
+*.onnx
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints/
+
+# Local overrides
+docker-compose.override.yml
+*.local

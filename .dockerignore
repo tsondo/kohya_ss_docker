@@ -1,0 +1,18 @@
+# Ignore everything not needed for build
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+*.bak
+*.safetensors
+*.ckpt
+*.pt
+dataset/
+output/
+captions/
+venv/
+.env
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,12 @@
+# docker-compose.lora.yaml
+services:
+  lora-trainer:
+    build:
+      context: .
+      dockerfile: Dockerfile.lora-trainer
+    volumes:
+      - ./dataset:/workspace/dataset
+      - ./output:/workspace/output
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
