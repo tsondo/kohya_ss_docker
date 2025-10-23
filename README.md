@@ -2,11 +2,11 @@
 ![CUDA](https://img.shields.io/badge/CUDA-12.8-blue)
 ![Torch](https://img.shields.io/badge/Torch-2.2.2-informational)
 ![xFormers](https://img.shields.io/badge/xFormers-enabled-success)
-![License](https://img.shields.io/github/license/tsondo/lora-trainer)
+![License](https://img.shields.io/github/license/tsondo/kohya_ss_docker)
 
-# 🧩 lora-trainer
+# 🧩 Containerized kohya_ss lora trainer 
 
-A reproducible, persistent Docker setup for running [Kohya_ss LoRA Trainer](https://github.com/bmaltais/kohya_ss) with GPU acceleration, clean config management, and out‑of‑the‑box defaults that mirror the design of [a1111-docker](https://github.com/tsondo/a1111-docker).
+A reproducible, persistent Docker setup for running [Kohya_ss LoRA Trainer](https://github.com/bmaltais/kohya_ss) with GPU acceleration, clean config management, and out‑of‑the‑box defaults.
 
 ---
 
