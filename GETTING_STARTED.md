@@ -1,76 +1,68 @@
-# GETTING_STARTED: LoRA Training with Docker
+# Getting Started with kohya_ss_docker
 
-This guide introduces the basics of LoRA training using the **lora-trainer** container.
-
----
-
-## What is Docker?
-
-Docker lets you run applications in isolated containers. Think of it as a lightweight virtual machine that always starts clean, but with persistent folders mounted from your host.
+This guide is for anyone new to Docker or kohya_ss. It explains the basics in plain language and points you back to the main [README.md](README.md) for deeper technical details.
 
 ---
 
-## What is Kohya_ss?
+## 🐳 What is Docker?
 
-[Kohya_ss](https://github.com/bmaltais/kohya_ss) is a popular trainer for LoRA (Low‑Rank Adaptation) models. It fine‑tunes large diffusion models (like SDXL) on your own dataset.
-
----
-
-## Persistent vs. Ephemeral
-
-- **Persistent**:
-  - `configs/` → training configs and prompts
-  - `dataset/` → your images and captions
-  - `models/` → base models (e.g. SDXL)
-  - `output/` → trained LoRAs, logs, samples
-  - `venv-cache` → Python environment (Docker volume)
-
-- **Ephemeral**:
-  - The container filesystem itself. Rebuilt on `docker compose build`.
+Docker packages software into **containers**.  
+Think of a container as a lightweight, portable box that includes everything the program needs (libraries, dependencies, configs).  
+The benefit: the software runs the same way on any machine, without you having to manually install all the pieces.
 
 ---
 
-## First Training Run
+## 🎨 What is kohya_ss?
 
-1. Place your base model in `models/` (e.g. `models/base_model.safetensors`).
-2. Place your training images in `dataset/images/`.
-3. Adjust `configs/config_lora-sample.toml` if needed.
-4. Launch training:
-
-\`\`\`bash
-docker compose run --rm lora-trainer \
-  accelerate launch ./sd-scripts/sdxl_train_network.py \
-  --config_file /workspace/configs/config_lora-sample.toml
-\`\`\`
+[kohya_ss](https://github.com/bmaltais/kohya_ss) is a popular trainer for **LoRA fine‑tuning** of Stable Diffusion models.  
+It lets you adapt large diffusion models (like SDXL) to your own dataset with efficient training.
 
 ---
 
-## Daily Workflow
+## 📦 Why this build?
 
-- **Start interactive shell**:
-  \`\`\`bash
-  docker compose run --rm lora-trainer
-  \`\`\`
+This Docker setup separates what’s **ephemeral** (rebuilt each time) from what’s **persistent** (your data and results):
 
-- **Run training directly**:
-  \`\`\`bash
-  docker compose run --rm lora-trainer accelerate launch ...
-  \`\`\`
+- **Ephemeral (inside the container):**
+  - Python environment
+  - Installed packages
+  - The container filesystem itself
 
-- **Stop containers**:
-  \`\`\`bash
-  docker compose down
-  \`\`\`
+- **Persistent (mounted from your host):**
+  - `models/` → base models (e.g. SDXL checkpoints)
+  - `dataset/` → your training images and captions
+  - `configs/` → TOML configs and sample prompts
+  - `output/` → trained LoRAs, logs, and samples
+  - `venv-cache/` → cached Python environment
+
+This means you can rebuild or update the container at any time without losing your models, configs, or outputs.
 
 ---
 
-## Resetting the Environment
+## 🚀 How to run
 
-If dependencies break or you want a clean slate:
+See the [README.md](README.md) for full setup instructions.  
+In short: run the provided `setup.sh` script, then start training with:
 
-\`\`\`bash
-docker volume rm lora-trainer_venv-cache
-bash setup.sh --no-cache
-\`\`\`
+    docker compose run --rm lora-trainer \
+      accelerate launch ./sd-scripts/sdxl_train_network.py \
+      --config_file /workspace/configs/config_lora-sample.toml
 
-This wipes the venv volume and rebuilds from scratch.
+---
+
+## 🧩 Adding models and datasets
+
+1. Place a base model checkpoint (`.safetensors` or `.ckpt`) in `models/`.
+2. Place your training images and captions under `dataset/`.
+3. Adjust the TOML config in `configs/` to point to your dataset and model.
+4. Run training as shown above.
+
+---
+
+## ✅ Summary
+
+- Docker runs kohya_ss in a clean, reproducible environment.
+- Your models, datasets, configs, and outputs are **persistent** on your host.
+- Add base models under `models/` and datasets under `dataset/` to get started.
+- Launch training with `docker compose run …`.
+- For full details, see the main [README.md](README.md).

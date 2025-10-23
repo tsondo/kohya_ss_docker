@@ -1,69 +1,74 @@
-# HOWTO: Installing Docker with GPU Support (WSL + Linux)
+# 🐧 Installing Docker on Linux (Ubuntu 22.04+)
 
-This guide walks you through installing Docker and enabling GPU acceleration so you can use **lora-trainer** on Windows (via WSL2) or Linux.
+Follow these steps to set up Docker with GPU support on Linux. Once complete, you can run kohya_ss_docker containers as described in the main README.
 
 ---
 
-## 🐧 Linux (Ubuntu/Debian/Arch)
+## 1. Install Docker Engine
 
-1. **Install Docker Engine**
+On Ubuntu/Debian:
 
-Follow the official instructions:  
-https://docs.docker.com/engine/install/
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install ca-certificates curl gnupg lsb-release -y
 
-2. **Install Docker Compose plugin**
+    # Add Docker’s official GPG key
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+      | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-\`\`\`bash
-sudo apt install docker-compose-plugin
-\`\`\`
+    # Add Docker repository
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+      https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+      | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-3. **Add your user to the Docker group (optional)**
+    # Install Docker Engine and Compose plugin
+    sudo apt update
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-\`\`\`bash
-sudo usermod -aG docker $USER
-newgrp docker
-\`\`\`
+---
 
-4. **Verify installation**
+## 2. Add Your User to the Docker Group
 
-\`\`\`bash
-docker run --rm hello-world
-\`\`\`
+By default, Docker requires `sudo`. To run it as your normal user:
 
-If you see the hello‑world message, Docker is working.
+    sudo usermod -aG docker $USER
+    newgrp docker
 
-5. **Verify GPU support**
+Now you can run `docker ps` without `sudo`.
 
-\`\`\`bash
-docker run --rm --gpus all nvidia/cuda:12.8.0-runtime-ubuntu22.04 nvidia-smi
-\`\`\`
+---
+
+## 3. Install NVIDIA Container Toolkit
+
+This enables GPU passthrough into Docker containers.
+
+    distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+    curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey \
+      | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit.gpg
+
+    curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list \
+      | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+    sudo apt update
+    sudo apt install -y nvidia-container-toolkit
+    sudo nvidia-ctk runtime configure --runtime=docker
+    sudo systemctl restart docker
+
+---
+
+## 4. Verify Installation
+
+    docker run --rm hello-world
+
+GPU test:
+
+    docker run --rm --gpus all nvidia/cuda:12.8.0-runtime-ubuntu22.04 nvidia-smi
 
 You should see your GPU listed.
 
 ---
 
-## 🪟 Windows (Docker Desktop + WSL2)
-
-1. **Install Docker Desktop**  
-   Download from: https://www.docker.com/products/docker-desktop/
-
-2. **Enable WSL2 integration** during setup.
-
-3. **Install a Linux distro** (Ubuntu recommended) from the Microsoft Store.
-
-4. **Open your WSL terminal** (Ubuntu).
-
-5. **Verify Docker inside WSL**
-
-\`\`\`bash
-docker run --rm hello-world
-\`\`\`
-
-6. **Verify GPU support**
-
-\`\`\`bash
-docker run --rm --gpus all nvidia/cuda:12.8.0-runtime-ubuntu22.04 nvidia-smi
-\`\`\`
+✅ That’s it — Docker is ready. Head back to the main README for instructions on cloning the repo and running the container.
 
 ---
-
